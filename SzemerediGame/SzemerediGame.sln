@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SzemerediGame", "SzemerediGame\SzemerediGame.csproj", "{9832AD3C-EE1B-4B01-B125-58E5FBDF74B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SzemerediGame", "SzemerediGame\SzemerediGame.csproj", "{571E876A-66E0-4645-80D4-A7DA2CE4C1B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9832AD3C-EE1B-4B01-B125-58E5FBDF74B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9832AD3C-EE1B-4B01-B125-58E5FBDF74B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9832AD3C-EE1B-4B01-B125-58E5FBDF74B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9832AD3C-EE1B-4B01-B125-58E5FBDF74B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{571E876A-66E0-4645-80D4-A7DA2CE4C1B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{571E876A-66E0-4645-80D4-A7DA2CE4C1B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{571E876A-66E0-4645-80D4-A7DA2CE4C1B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{571E876A-66E0-4645-80D4-A7DA2CE4C1B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
