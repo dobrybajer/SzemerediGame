@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using SzemerediGame.Enums;
 
-namespace SzemerediGame
+namespace SzemerediGame.Logic
 {
     public class Board : ICloneable
     {
         private readonly int _winningSeriesLength;
         public ComputerPlayer[] BoardArray { get; }
 
-        private int _movesCountSoFar = 0;
+        private int _movesCountSoFar;
 
 
         public Board(int size, int winningSeriesLength)
@@ -21,11 +23,11 @@ namespace SzemerediGame
             BoardArray = new ComputerPlayer[size];
         }
 
-        private Board(ComputerPlayer[] board, int winningSeriesLength)
+        private Board(IReadOnlyList<ComputerPlayer> board, int winningSeriesLength)
         {
             BoardArray = new ComputerPlayer[BoardArray.Length];
 
-            for (var i = 0; i < board.Length; i++)
+            for (var i = 0; i < board.Count; i++)
                 BoardArray[i] = board[i];
 
             _winningSeriesLength = winningSeriesLength;

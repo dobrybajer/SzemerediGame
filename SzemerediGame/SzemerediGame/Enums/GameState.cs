@@ -1,4 +1,4 @@
-﻿namespace SzemerediGame
+﻿namespace SzemerediGame.Enums
 {
     public enum GameState
     {

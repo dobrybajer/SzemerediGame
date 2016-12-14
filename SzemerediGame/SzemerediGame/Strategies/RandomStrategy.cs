@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using SzemerediGame.Interfaces;
+using SzemerediGame.Logic;
 
 namespace SzemerediGame.Strategies
 {
@@ -25,7 +27,7 @@ namespace SzemerediGame.Strategies
 
             var randomIndex = _random.Next(0, potentialMoves.Count - 1);
 
-            return new GameMove() { Index = potentialMoves[randomIndex] };
+            return new GameMove { Index = potentialMoves[randomIndex] };
         }
     }
 }

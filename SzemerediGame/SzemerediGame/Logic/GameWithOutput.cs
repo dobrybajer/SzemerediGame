@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading;
+using SzemerediGame.Enums;
 
-namespace SzemerediGame
+namespace SzemerediGame.Logic
 {
     public class GameWithOutput : Game
     {

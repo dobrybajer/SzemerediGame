@@ -1,4 +1,4 @@
-﻿namespace SzemerediGame
+﻿namespace SzemerediGame.Logic
 {
     public class GameMove
     {

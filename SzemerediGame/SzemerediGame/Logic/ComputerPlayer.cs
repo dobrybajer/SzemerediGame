@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Drawing;
+using SzemerediGame.Interfaces;
 
-namespace SzemerediGame
+namespace SzemerediGame.Logic
 {
     public class ComputerPlayer
     {

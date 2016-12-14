@@ -1,4 +1,6 @@
-﻿namespace SzemerediGame
+﻿using SzemerediGame.Enums;
+
+namespace SzemerediGame.Logic
 {
     public class Game
     {

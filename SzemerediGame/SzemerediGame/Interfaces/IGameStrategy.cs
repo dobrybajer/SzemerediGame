@@ -1,4 +1,6 @@
-﻿namespace SzemerediGame
+﻿using SzemerediGame.Logic;
+
+namespace SzemerediGame.Interfaces
 {
     public interface IGameStrategy
     {
