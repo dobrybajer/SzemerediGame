@@ -33,6 +33,7 @@ namespace SzemerediGame.Algorithms
                                     {
                                         z = r;
                                         sequenceCount++;
+                                        if (sequenceCount >= k) return true;
                                     }
                                 }
                                 z = j;
@@ -42,6 +43,7 @@ namespace SzemerediGame.Algorithms
                                     {
                                         z = l;
                                         sequenceCount++;
+                                        if (sequenceCount >= k) return true;
                                     }
                                 }
 
