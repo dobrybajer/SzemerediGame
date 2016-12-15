@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\ArithmeticProgression.cs" />
     <Compile Include="Enums\WritingType.cs" />
     <Compile Include="Logic\Board.cs" />
     <Compile Include="Logic\ComputerPlayer.cs" />
