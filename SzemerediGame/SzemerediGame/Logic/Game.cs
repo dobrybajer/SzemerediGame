@@ -18,6 +18,14 @@ namespace SzemerediGame.Logic
             Board = new Board(size, winningSeriesLength);
         }
 
+        public Game(ComputerPlayer player1, ComputerPlayer player2, int[] set, int winningSeriesLength)
+        {
+            _player1 = player1;
+            _player2 = player2;
+
+            CurrentPlayer = _player2; // Celowo ustawiony drugi gracz
+            Board = new Board(set.Length, winningSeriesLength);
+        }
 
         public virtual GameResult Start()
         {

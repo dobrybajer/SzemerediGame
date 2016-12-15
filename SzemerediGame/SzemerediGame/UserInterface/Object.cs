@@ -13,6 +13,7 @@ namespace SzemerediGame.UserInterface
         protected string[] TextArray;
         protected WritingType Type;
         protected Color Color;
+        private readonly char _defaultDelimiter;
 
         protected Object(string text, WritingType type, Color color, char delimiter)
         {
@@ -20,6 +21,13 @@ namespace SzemerediGame.UserInterface
             TextArray = text.Split(delimiter).ToArray();
             Type = type;
             Color = color;
+            _defaultDelimiter = delimiter;
+        }
+
+        public void UpdateText(string text, char? delimiter = null)
+        {
+            Text = text;
+            TextArray = text.Split(delimiter ?? _defaultDelimiter).ToArray();
         }
 
         public virtual void WriteContent()
@@ -50,6 +58,23 @@ namespace SzemerediGame.UserInterface
             WriteLine(Environment.NewLine + "Wsciśnij BACKSPACE, aby powrocić do menu...");
         }
 
+        public virtual object GetContent()
+        {
+            var obj = Console.ReadLine();
+
+            return obj;
+        }
+
+        public void ClearLines(int count = 1)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+            }
+        }
+
         public virtual void ClearContent()
         {
             var totalLinesCount = TextArray.Length;
@@ -63,12 +88,8 @@ namespace SzemerediGame.UserInterface
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            for (var i = 0; i < totalLinesCount; i++)
-            {
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
-            }
+
+            ClearLines(totalLinesCount);
         }
     }
 }
