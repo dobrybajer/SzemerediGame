@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using SzemerediGame.Algorithms;
 using SzemerediGame.Enums;
 
 namespace SzemerediGame.Logic
@@ -41,12 +43,12 @@ namespace SzemerediGame.Logic
             BoardArray[move.Index] = player;
             _movesCountSoFar += 1;
 
-            return EvaluateMove(move);
+            return EvaluateMove(move, player);
         }
 
-        private GameState EvaluateMove(GameMove move)
+        private GameState EvaluateMove(GameMove move, ComputerPlayer player)
         {
-            if(IsWinningMove(move))
+            if(IsWinningMove(move, player))
                 return GameState.Win;
             
             return IsTieMove() ? GameState.Tie : GameState.None;
@@ -57,11 +59,18 @@ namespace SzemerediGame.Logic
             return _movesCountSoFar == BoardArray.Length;
         }
 
-        private bool IsWinningMove(GameMove move)
+        private bool IsWinningMove(GameMove move, ComputerPlayer player)
         {
-            //TODO implementacja sprawdzenia wygranej
+            //TODO improvement
+            var tab = new List<int>();
 
-            return false;
+            for (var i = 0; i < BoardArray.Length; i++)
+            {
+                if(BoardArray[i] == player)
+                    tab.Add(i);
+            }
+
+            return ArithmeticProgression.IsThereAnyProgressionOutThere(tab.ToArray(), _winningSeriesLength);
         }
 
         public object Clone()

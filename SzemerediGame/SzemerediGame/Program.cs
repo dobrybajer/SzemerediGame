@@ -30,14 +30,14 @@ namespace SzemerediGame
                 694000232, 694000235, 694000236
             };
 
-            var ap = new ArithmeticProgression();
-            var r1 = ap.IsThereAnyProgressionOutThere(set, 5);
-            var r2 = ap.IsThereAnyProgressionOutThere(set2, 5);
-            var r3 = ap.IsThereAnyProgressionOutThere(set3, 10);
+            //var ap = new ArithmeticProgression();
+            //var r1 = ap.IsThereAnyProgressionOutThere(set, 5);
+            //var r2 = ap.IsThereAnyProgressionOutThere(set2, 5);
+            //var r3 = ap.IsThereAnyProgressionOutThere(set3, 10);
 
-            Console.WriteLine(r1);
-            Console.WriteLine(r2);
-            Console.WriteLine(r3);
+            //Console.WriteLine(r1);
+            //Console.WriteLine(r2);
+            //Console.WriteLine(r3);
 
             var mainWindow = new MainWindow();
             mainWindow.DrawGame();

@@ -2,9 +2,9 @@
 
 namespace SzemerediGame.Algorithms
 {
-    internal class ArithmeticProgression
+    internal static class ArithmeticProgression
     {
-        public bool IsThereAnyProgressionOutThere(int[] set, int k)
+        public static bool IsThereAnyProgressionOutThere(int[] set, int k)
         {
             var n = set.Length;
             var gapSize = n/(double) (k-1);

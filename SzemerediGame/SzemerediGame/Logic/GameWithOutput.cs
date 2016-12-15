@@ -21,6 +21,12 @@ namespace SzemerediGame.Logic
             return base.Start();
         }
 
+        protected override void GameEnded(GameState result)
+        {
+            Console.WriteLine("Wynik: " + result.ToString());
+            Console.WriteLine("Gracz: " + CurrentPlayer.Color.ToString());
+        }
+
         protected override void PlayerMoved(GameMove move, GameState result)
         {
             foreach (var player in Board.BoardArray)
