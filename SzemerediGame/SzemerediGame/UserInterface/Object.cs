@@ -38,7 +38,7 @@ namespace SzemerediGame.UserInterface
             }
         }
 
-        protected void WriteLine(string text, Color? color = null)
+        public void WriteLine(string text, Color? color = null)
         {
             switch (Type)
             {

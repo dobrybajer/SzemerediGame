@@ -48,56 +48,76 @@ namespace SzemerediGame.UserInterface
 
                         int[] setArray = null;
                         int[] argsArray = null;
+                        int? n = null, k = null, a = null, b = null;
                         var correctParameters = false;
 
                         if (subPressedKey.Key == ConsoleKey.D1)
                         {
                             while (!correctParameters)
                             {
-                                gameInput.UpdateText("Podaj zbiór liczb naturalnych oddzielonych średnikiem");
-
                                 try
                                 {
-                                    gameInput.WriteContent();
-                                    var input = gameInput.GetContent() as string;
-                                    setArray = input.Split(';').Select(int.Parse).ToArray();
+                                    setArray = null;
+                                    gameInput.WriteLine("Podaj zbiór liczb naturalnych oddzielonych średnikiem:");
+                                    var input1 = gameInput.GetContent() as string;
+                                    setArray = input1.Split(';').Select(int.Parse).ToArray();
+
+                                    gameInput.WriteLine("Podaj długość ciągu arytmetycznego:");
+                                    var input2 = gameInput.GetContent() as string;
+                                    k = int.Parse(input2);
+
                                     correctParameters = true;
                                 }
                                 catch
                                 {
-                                    Object.ClearLines(3);
+                                    Object.ClearLines(setArray == null ? 3 : 5);
                                     gameInput.WriteLineWrongParameter();
                                 }
                             }
 
-                            Object.ClearLines(3);
+                            Object.ClearLines(5);
 
-                            game.Start(/*setArray*/);
+                            game.Start(/*setArray, k.Value*/);
                         }
                         else if (subPressedKey.Key == ConsoleKey.D2)
                         {
                             while (!correctParameters)
                             {
-                                gameInput.UpdateText("Podaj rozmiar zadania, a następnie zakres losowanych liczb <a,b> (wartości oddzielone średnkiem)");
-
                                 try
                                 {
-                                    gameInput.WriteContent();
-                                    var input = gameInput.GetContent() as string;
-                                    argsArray = input.Split(';').Select(int.Parse).ToArray();
-                                    if (argsArray.Length != 3) throw new ArgumentException();
+                                    n = null;
+                                    k = null;
+                                    a = null;
+                                    b = null;
+
+                                    gameInput.WriteLine("Podaj rozmiar zadania:");
+                                    var input1 = gameInput.GetContent() as string;
+                                    n = int.Parse(input1);
+
+                                    gameInput.WriteLine("Podaj długość ciągu arytmetycznego:");
+                                    var input2 = gameInput.GetContent() as string;
+                                    k = int.Parse(input2);
+
+                                    gameInput.WriteLine("Podaj dolną wartość przedziału losowania liczb:");
+                                    var input3 = gameInput.GetContent() as string;
+                                    a = int.Parse(input3);
+
+                                    gameInput.WriteLine("Podaj górną wartość przedziału losowania liczb:");
+                                    var input4 = gameInput.GetContent() as string;
+                                    b = int.Parse(input4);
+
                                     correctParameters = true;
                                 }
                                 catch
                                 {
-                                    Object.ClearLines(3);
+                                    Object.ClearLines(n == null ? 3 : (k == null ? 5 : (a == null ? 7 : 9)));
                                     gameInput.WriteLineWrongParameter();
                                 }
                             }
 
-                            Object.ClearLines(3);
+                            Object.ClearLines(8);
 
-                            game.Start(/*argsArray[0], argsArray[1]*/);
+                            game.Start(/*n.Value, k.Value, a.Value, b.Value*/);
                         }
 
                         Console.WriteLine("Naciśnij dowolny klawisz, aby powrócić do menu głównego...");
