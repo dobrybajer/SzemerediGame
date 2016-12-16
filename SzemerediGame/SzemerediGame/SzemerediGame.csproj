@@ -56,6 +56,7 @@
     <Compile Include="Logic\GameMove.cs" />
     <Compile Include="Logic\GameResult.cs" />
     <Compile Include="Enums\GameState.cs" />
+    <Compile Include="Logic\GameThread.cs" />
     <Compile Include="Logic\GameWithOutput.cs" />
     <Compile Include="Interfaces\IGameStrategy.cs" />
     <Compile Include="Program.cs" />

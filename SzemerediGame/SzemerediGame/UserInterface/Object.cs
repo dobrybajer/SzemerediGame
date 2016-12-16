@@ -65,7 +65,7 @@ namespace SzemerediGame.UserInterface
             return obj;
         }
 
-        public void ClearLines(int count = 1)
+        public static void ClearLines(int count = 1)
         {
             for (var i = 0; i < count; i++)
             {

@@ -23,8 +23,10 @@ namespace SzemerediGame.Logic
 
         protected override void GameEnded(GameState result)
         {
-            Console.WriteLine("Wynik: " + result.ToString());
-            Console.WriteLine("Gracz: " + CurrentPlayer.Color.ToString());
+            Console.WriteLine("Wynik: " + result);
+            Console.WriteLine("Gracz: " + CurrentPlayer.Color);
+
+            base.GameEnded(result);
         }
 
         protected override void PlayerMoved(GameMove move, GameState result)

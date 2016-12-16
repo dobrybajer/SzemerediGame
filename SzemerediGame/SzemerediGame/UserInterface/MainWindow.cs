@@ -65,12 +65,12 @@ namespace SzemerediGame.UserInterface
                                 }
                                 catch
                                 {
-                                    gameInput.ClearLines(3);
+                                    Object.ClearLines(3);
                                     gameInput.WriteLineWrongParameter();
                                 }
                             }
 
-                            gameInput.ClearLines(3);
+                            Object.ClearLines(3);
 
                             game.Start(/*setArray*/);
                         }
@@ -90,19 +90,20 @@ namespace SzemerediGame.UserInterface
                                 }
                                 catch
                                 {
-                                    gameInput.ClearLines(3);
+                                    Object.ClearLines(3);
                                     gameInput.WriteLineWrongParameter();
                                 }
                             }
 
-                            gameInput.ClearLines(3);
+                            Object.ClearLines(3);
 
                             game.Start(/*argsArray[0], argsArray[1]*/);
                         }
 
                         Console.WriteLine("Naciśnij dowolny klawisz, aby powrócić do menu głównego...");
-                        Console.ReadKey();
-                        menu.ClearLines(Console.BufferHeight - 6);
+                        Console.ReadKey(true);
+                        Console.Clear();
+                        header.WriteContent();
                         menu.WriteContent();
 
                         break;

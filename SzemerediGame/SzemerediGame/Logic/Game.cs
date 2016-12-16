@@ -2,7 +2,7 @@
 
 namespace SzemerediGame.Logic
 {
-    public class Game
+    public class Game : GameThread
     {
         private readonly ComputerPlayer _player1;
         private readonly ComputerPlayer _player2;
@@ -29,13 +29,16 @@ namespace SzemerediGame.Logic
 
         public virtual GameResult Start()
         {
+            CreateTaskPausingGame();
+
             GameState result;
             do
             {
+                Mrse.WaitOne();
                 SwitchPlayers();
                 var move = CurrentPlayer.GetMove(Board);
                 result = Board.MakeMove(move, CurrentPlayer);
-                PlayerMoved(move, result);
+                PlayerMoved(move, result);     
             } while (result == GameState.None);
 
             GameEnded(result);
@@ -51,6 +54,7 @@ namespace SzemerediGame.Logic
         protected virtual void GameEnded(GameState result)
         {
             //Nop
+            DisposeTaskPausingGame();
         }
 
         private void SwitchPlayers()
