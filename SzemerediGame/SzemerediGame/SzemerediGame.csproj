@@ -53,12 +53,15 @@
     <Compile Include="Logic\Board.cs" />
     <Compile Include="Logic\ComputerPlayer.cs" />
     <Compile Include="Logic\Game.cs" />
+    <Compile Include="Logic\GameField.cs" />
     <Compile Include="Logic\GameMove.cs" />
     <Compile Include="Logic\GameResult.cs" />
     <Compile Include="Enums\GameState.cs" />
     <Compile Include="Logic\GameThread.cs" />
     <Compile Include="Logic\GameWithOutput.cs" />
     <Compile Include="Interfaces\IGameStrategy.cs" />
+    <Compile Include="Helpers\GameHelpers.cs" />
+    <Compile Include="Helpers\OutputHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strategies\RandomStrategy.cs" />

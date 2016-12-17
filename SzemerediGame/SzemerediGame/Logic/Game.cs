@@ -11,15 +11,6 @@ namespace SzemerediGame.Logic
         protected ComputerPlayer CurrentPlayer;
         protected readonly Board Board;
 
-        public Game(ComputerPlayer player1, ComputerPlayer player2, int size, int winningSeriesLength)
-        {
-            _player1 = player1;
-            _player2 = player2;
-
-            CurrentPlayer = _player2; // Celowo ustawiony drugi gracz
-            Board = new Board(size, winningSeriesLength);
-        }
-
         public Game(ComputerPlayer player1, ComputerPlayer player2, IReadOnlyList<int> set, int winningSeriesLength)
         {
             _player1 = player1;
@@ -56,7 +47,6 @@ namespace SzemerediGame.Logic
         protected virtual void GameEnded(GameState result, int[] winningSet)
         {
             //Nop
-            DisposeTaskPausingGame();
         }
 
         private void SwitchPlayers()
