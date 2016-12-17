@@ -1,4 +1,6 @@
-﻿using SzemerediGame.Enums;
+﻿using System.Collections.Generic;
+using System.Threading;
+using SzemerediGame.Enums;
 
 namespace SzemerediGame.Logic
 {
@@ -18,13 +20,13 @@ namespace SzemerediGame.Logic
             Board = new Board(size, winningSeriesLength);
         }
 
-        public Game(ComputerPlayer player1, ComputerPlayer player2, int[] set, int winningSeriesLength)
+        public Game(ComputerPlayer player1, ComputerPlayer player2, IReadOnlyList<int> set, int winningSeriesLength)
         {
             _player1 = player1;
             _player2 = player2;
 
             CurrentPlayer = _player2; // Celowo ustawiony drugi gracz
-            Board = new Board(set.Length, winningSeriesLength);
+            Board = new Board(set, winningSeriesLength);
         }
 
         public virtual GameResult Start()
@@ -41,9 +43,9 @@ namespace SzemerediGame.Logic
                 PlayerMoved(move, result);     
             } while (result == GameState.None);
 
-            GameEnded(result);
+            GameEnded(result, Board.WinningSet);
 
-            return new GameResult(result,CurrentPlayer);
+            return new GameResult(result, CurrentPlayer);
         }
 
         protected virtual void PlayerMoved(GameMove move, GameState result)
@@ -51,7 +53,7 @@ namespace SzemerediGame.Logic
             //Nop
         }
 
-        protected virtual void GameEnded(GameState result)
+        protected virtual void GameEnded(GameState result, int[] winningSet)
         {
             //Nop
             DisposeTaskPausingGame();

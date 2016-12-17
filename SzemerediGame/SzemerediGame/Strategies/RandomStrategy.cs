@@ -19,7 +19,7 @@ namespace SzemerediGame.Strategies
             var potentialMoves = new List<int>();
             for (var i = 0; i < board.BoardArray.Length; i++)
             {
-                if (board.BoardArray[i] == null)
+                if (!board.BoardArray[i].IsAssigned)
                 {
                     potentialMoves.Add(i);
                 }

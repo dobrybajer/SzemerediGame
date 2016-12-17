@@ -5,8 +5,13 @@ namespace SzemerediGame.Logic
 {
     public class ComputerPlayer
     {
-        public ConsoleColor Color { get; }
+        public ConsoleColor Color { get; set; }
+
+        public int Value { get; set; }
+
         private readonly IGameStrategy _gameStrategy;
+
+        public bool IsAssigned;
 
         public ComputerPlayer(ConsoleColor color, IGameStrategy gameStrategy)
         {
@@ -14,6 +19,11 @@ namespace SzemerediGame.Logic
             _gameStrategy = gameStrategy;
         }
 
+        public ComputerPlayer()
+        {
+            Color = ConsoleColor.DarkCyan;
+            _gameStrategy = null;
+        }
 
         public GameMove GetMove(Board board)
         {

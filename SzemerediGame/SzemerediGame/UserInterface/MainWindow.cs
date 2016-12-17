@@ -11,7 +11,7 @@ namespace SzemerediGame.UserInterface
         {
             var player1 = new ComputerPlayer(ConsoleColor.Red, new RandomStrategy());
             var player2 = new ComputerPlayer(ConsoleColor.Green, new RandomStrategy());
-            var game = new GameWithOutput(player1, player2, 10, 3);
+            //var game = new GameWithOutput(player1, player2, 10, 3);
             var header = new Header("Gra Szemerediego");
             var menu = new Menu("1. Start;2. About;3. Exit");
             var gameInput = new GameInput("");
@@ -76,8 +76,8 @@ namespace SzemerediGame.UserInterface
                             }
 
                             Object.ClearLines(5);
-
-                            game.Start(/*setArray, k.Value*/);
+                            var game = new GameWithOutput(player1, player2, setArray, k.Value);
+                            game.Start();
                         }
                         else if (subPressedKey.Key == ConsoleKey.D2)
                         {
@@ -117,7 +117,7 @@ namespace SzemerediGame.UserInterface
 
                             Object.ClearLines(8);
 
-                            game.Start(/*n.Value, k.Value, a.Value, b.Value*/);
+                            //game.Start(/*n.Value, k.Value, a.Value, b.Value*/);
                         }
 
                         Console.WriteLine("Naciśnij dowolny klawisz, aby powrócić do menu głównego...");
