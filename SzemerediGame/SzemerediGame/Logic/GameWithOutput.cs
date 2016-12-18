@@ -59,15 +59,15 @@ namespace SzemerediGame.Logic
 
         protected override void PlayerMoved(GameMove move, GameState result)
         {
-            foreach (var player in Board.BoardArray)
+            foreach (var gameField in Board.BoardArray)
             {
-                if (!player.IsAssigned)
+                if (!gameField.IsAssigned)
                 {
-                    Console.Write(player.Value + " ");
+                    Console.Write(gameField.Value + " ");
                     continue;
                 }
-                Console.ForegroundColor = player.Player.Color;
-                Console.Write(player.Value + " ");
+                Console.ForegroundColor = gameField.Player.Color;
+                Console.Write(gameField.Value + " ");
                 Console.ForegroundColor = DefaultForegroundColor;
             }
             Console.WriteLine();

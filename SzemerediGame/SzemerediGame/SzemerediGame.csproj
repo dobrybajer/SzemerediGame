@@ -64,6 +64,7 @@
     <Compile Include="Helpers\OutputHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Strategies\ImprovedRandomStrategy.cs" />
     <Compile Include="Strategies\RandomStrategy.cs" />
     <Compile Include="UserInterface\GameInput.cs" />
     <Compile Include="UserInterface\Description.cs" />

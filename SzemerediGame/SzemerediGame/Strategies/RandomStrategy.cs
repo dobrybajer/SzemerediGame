@@ -14,7 +14,7 @@ namespace SzemerediGame.Strategies
             _random = new Random();
         }
 
-        public GameMove Move(Board board)
+        public GameMove Move(Board board, ComputerPlayer player)
         {
             var potentialMoves = new List<int>();
             for (var i = 0; i < board.BoardArray.Length; i++)

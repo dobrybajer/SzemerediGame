@@ -27,7 +27,7 @@ namespace SzemerediGame.Logic
 
         public GameMove GetMove(Board board)
         {
-            return _gameStrategy.Move(board);
+            return _gameStrategy.Move(board, this);
         }
 
     }

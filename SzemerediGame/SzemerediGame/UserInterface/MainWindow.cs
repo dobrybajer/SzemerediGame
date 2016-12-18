@@ -10,9 +10,6 @@ namespace SzemerediGame.UserInterface
     {
         internal void DrawGame()
         {
-            var player1 = new ComputerPlayer(ConsoleColor.Red, new RandomStrategy());
-            var player2 = new ComputerPlayer(ConsoleColor.Green, new RandomStrategy());
-
             var header = new Header(Content.HeaderText);
             var menu = new Menu(Content.MenuOptionsText);
             var gameInput = new GameInput(String.Empty);
@@ -29,7 +26,7 @@ namespace SzemerediGame.UserInterface
                 switch (pressedKey.Key)
                 {
                     case ConsoleKey.D1:
-                        HandleStartGame(menu, gameInput, player1, player2, header);
+                        HandleStartGame(menu, gameInput, header);
                         break;
                     //case ConsoleKey.D2:
                     //    description.WriteContent();
@@ -47,7 +44,7 @@ namespace SzemerediGame.UserInterface
             }
         }
 
-        private static void HandleStartGame(Menu menu, GameInput gameInput, ComputerPlayer player1, ComputerPlayer player2, Header header)
+        private static void HandleStartGame(Menu menu, GameInput gameInput, Header header)
         {
             menu.ClearContent();
             gameInput.UpdateText(Content.SubMenuChoiceText);
@@ -75,7 +72,14 @@ namespace SzemerediGame.UserInterface
                     break;
             }
 
-            Console.WriteLine($"Parametry rozgrywki:\nIlość liczb: {boardValues?.Length}\nZwycięska długość ciągu: {k}\nIlość graczy: 2\n");
+            var player1 = new ComputerPlayer(ConsoleColor.Red, new RandomStrategy());
+            var player2 = new ComputerPlayer(ConsoleColor.Green, new ImprovedRandomStrategy(k.Value));
+
+            Console.WriteLine($"Parametry rozgrywki:\nIlość liczb: {boardValues?.Length}\nZwycięska długość ciągu: {k}\nLiczba graczy: 2\n");
+            Console.WriteLine("Gracz czerwony gra strategią zupełnie losową (wybiera dowolne z niezajętych jeszcze pól).\n" +
+                              "Gracz zielony gra usprawnioną strategią losową tzn.:\n" +
+                              "\tJeśli w danym ruchu jest pole które daje mu natychmiastową wygraną/przegraną to maluje te pole,\n" +
+                              "\taby odpowiednio wygrać/zablokować). W pozostałych przypadkach rusza się losowo.\n");
 
             do
             {
