@@ -33,16 +33,15 @@ namespace SzemerediGame.Logic
 
         private void DrawWinningSet(int[] winningSet)
         {
-            if (winningSet != null)
-            {
-                var winningSortedList = winningSet.ToList();
+            if (winningSet == null) return;
 
-                for (var i = 0; i < Board.BoardArray.Length; i++)
-                {
-                    Console.Write(winningSortedList.Contains(i)
-                        ? OutputHelper.PrintMarker(Board.BoardArray[i].Value)
-                        : OutputHelper.PrintSpaces(Board.BoardArray[i].Value));
-                }
+            var winningSortedList = winningSet.ToList();
+
+            foreach (GameField gameField in Board.BoardArray)
+            {
+                Console.Write(winningSortedList.Contains(gameField.Value)
+                    ? OutputHelper.PrintMarker(gameField.Value)
+                    : OutputHelper.PrintSpaces(gameField.Value));
             }
         }
 

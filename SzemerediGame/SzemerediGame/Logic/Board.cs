@@ -72,10 +72,10 @@ namespace SzemerediGame.Logic
             //TODO użyć 'move' do opytmalizacji
             var tab = new List<int>();
 
-            for (var i = 0; i < BoardArray.Length; i++)
+            foreach (GameField gameField in BoardArray)
             {
-                if(BoardArray[i].IsAssigned && BoardArray[i].Player == player)
-                    tab.Add(BoardArray[i].Value);
+                if(gameField.IsAssigned && gameField.Player == player)
+                    tab.Add(gameField.Value);
             }
 
             return ArithmeticProgression.IsThereAnyProgressionOutThere_WithWinnigSet(tab.ToArray(), _winningSeriesLength);
