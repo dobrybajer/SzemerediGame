@@ -8,7 +8,7 @@ namespace SzemerediGame.Helpers
     {
         public static int[] GenerateArray(int n, int a, int b)
         {
-            return Prepare(Enumerable.Range(a, b).OrderBy(g => Guid.NewGuid()).Take(n));
+            return Prepare(Enumerable.Range(a, b - a).OrderBy(g => Guid.NewGuid()).Take(n));
         }
 
         public static int[] Prepare(IEnumerable<int> collection)

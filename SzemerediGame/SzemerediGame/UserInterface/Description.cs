@@ -24,5 +24,10 @@ namespace SzemerediGame.UserInterface
 
             WriteBackspaceMsg();
         }
+
+        public override void ClearContent()
+        {
+            ClearLines(6);
+        }
     }
 }

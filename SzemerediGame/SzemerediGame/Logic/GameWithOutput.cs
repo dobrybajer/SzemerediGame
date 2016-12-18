@@ -13,7 +13,7 @@ namespace SzemerediGame.Logic
 
         public GameWithOutput(ComputerPlayer player1, ComputerPlayer player2, int[] set, int winningSeriesLength) : base(player1, player2, set, winningSeriesLength)
         {
-            DefaultForegroundColor = ConsoleColor.Gray;
+            DefaultForegroundColor = Console.ForegroundColor;
         }
 
         public override GameResult Start()

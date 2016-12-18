@@ -16,7 +16,7 @@ namespace SzemerediGame.UserInterface
             var header = new Header(Content.HeaderText);
             var menu = new Menu(Content.MenuOptionsText);
             var gameInput = new GameInput(String.Empty);
-            var description = new Description(Content.DescriptionContentText);
+           // var description = new Description(Content.DescriptionContentText);
 
             header.WriteContent();
             menu.WriteContent();
@@ -31,10 +31,11 @@ namespace SzemerediGame.UserInterface
                     case ConsoleKey.D1:
                         HandleStartGame(menu, gameInput, player1, player2, header);
                         break;
+                    //case ConsoleKey.D2:
+                    //    description.WriteContent();
+                    //    description.ClearContent();
+                    //    break;
                     case ConsoleKey.D2:
-                        description.WriteContent();
-                        break;
-                    case ConsoleKey.D3:
                         Environment.Exit(0);
                         break;
                     default:
@@ -171,7 +172,7 @@ namespace SzemerediGame.UserInterface
                                              "ciąg arytmetyczny o zadanej długości k.;" +
                                              "Zadanie: Symulacja gry komputer kontra komputer, testy.";
 
-            public const string MenuOptionsText = "1. Start;2. About;3. Exit";
+            public const string MenuOptionsText = "1. Start;2. Exit";
 
             public const string HeaderText = "Gra Szemerediego";
 
