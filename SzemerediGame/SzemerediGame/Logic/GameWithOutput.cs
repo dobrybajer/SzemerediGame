@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using SzemerediGame.Enums;
 using SzemerediGame.Helpers;
-using SzemerediGame.UserInterface;
 
 namespace SzemerediGame.Logic
 {
@@ -18,8 +17,8 @@ namespace SzemerediGame.Logic
 
         public override GameResult Start()
         {
-            Console.WriteLine("Rozpoczęcie gry.");
-            Console.WriteLine();
+            Console.WriteLine("Klawisz P - pauza/kontynuacja\n");
+            Console.WriteLine("Rozpoczęcie gry.\n");
 
             return base.Start();
         }
@@ -50,12 +49,12 @@ namespace SzemerediGame.Logic
         private void DrawGameResult(GameState result)
         {
             Console.WriteLine();
-            Console.WriteLine("Wynik: " + result);
+            Console.WriteLine("Wynik: " + OutputHelper.TranslateResult(result));
 
             if (result != GameState.Win) return;
 
             Console.ForegroundColor = CurrentPlayer.Color;
-            Console.WriteLine("Gracz: " + CurrentPlayer.Color);
+            Console.WriteLine("Gracz: " + OutputHelper.TranslateColor(CurrentPlayer.Color));
             Console.ForegroundColor = DefaultForegroundColor;
         }
 

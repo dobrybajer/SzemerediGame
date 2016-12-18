@@ -75,12 +75,17 @@ namespace SzemerediGame.UserInterface
                     break;
             }
 
+            Console.WriteLine($"Parametry rozgrywki:\nIlość liczb: {boardValues?.Length}\nZwycięska długość ciągu: {k}\nIlość graczy: 2\n");
 
-            var game = new GameWithOutput(player1, player2, boardValues, k.Value);
-            game.Start();
+            do
+            {
+                var game = new GameWithOutput(player1, player2, boardValues, k.Value);
+                game.Start();
 
-            Console.WriteLine("Naciśnij dowolny klawisz, aby powrócić do menu głównego...");
-            Console.ReadKey(true);
+                Console.WriteLine("\nNaciśnij klawisz R aby powtórzyć rozgrywkę dla tych samych danych.\nNaciśnij dowolny inny klawisz, aby powrócić do menu głównego.\n");
+                subPressedKey = Console.ReadKey(true);
+            } while (subPressedKey.Key == ConsoleKey.R);
+
             Console.Clear();
             header.WriteContent();
             menu.WriteContent();
