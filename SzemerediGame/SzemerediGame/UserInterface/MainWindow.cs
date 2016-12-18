@@ -68,10 +68,10 @@ namespace SzemerediGame.UserInterface
             switch (subPressedKey.Key)
             {
                 case ConsoleKey.D1:
-                    boardValues = HandleExplicitBoardValues(gameInput, out k);
+                    boardValues = HandleRandomBoardValues(gameInput, out k);
                     break;
                 case ConsoleKey.D2:
-                    boardValues = HandleRandomBoardValues(gameInput, out k);
+                    boardValues = HandleExplicitBoardValues(gameInput, out k);
                     break;
             }
 
@@ -181,7 +181,9 @@ namespace SzemerediGame.UserInterface
 
             public const string HeaderText = "Gra Szemerediego";
 
-            public const string SubMenuChoiceText = "Wciśnij 1, aby podać zbiór liczb naturalnych dla zadania;Wciśnij 2, aby podać rozmiar zadania (N) oraz zakres losowanych liczb (<a,b>)";
+            public const string SubMenuChoiceText = "Podaj parametry rozgrywki. Możesz to zrobić na dwa poniższe sposoby.;;" +
+                                                    "Naciśnij 1, aby podać jedynie rozmiar zadania (N) oraz zakres losowanych liczb (<a,b>).;" +
+                                                    "Naciśnij 2, aby manualnie wprowadzić zbiór liczb naturalnych dla zadania.";
 
             public const string GiveExplicitValues = "Podaj zbiór liczb naturalnych oddzielonych średnikiem:";
 

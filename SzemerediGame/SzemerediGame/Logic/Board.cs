@@ -75,7 +75,7 @@ namespace SzemerediGame.Logic
             for (var i = 0; i < BoardArray.Length; i++)
             {
                 if(BoardArray[i].IsAssigned && BoardArray[i].Player == player)
-                    tab.Add(i);
+                    tab.Add(BoardArray[i].Value);
             }
 
             return ArithmeticProgression.IsThereAnyProgressionOutThere_WithWinnigSet(tab.ToArray(), _winningSeriesLength);
