@@ -11,10 +11,14 @@ namespace SzemerediGame.Strategies
     {
         private const int MaxNumber = 29;
 
-        private List<long> _allMovesSet;
+        private readonly Dictionary<long, ushort> _allMovesSet;
         private readonly List<int> _boardValues;
 
-        private readonly List<int> _excludedFields = new List<int>();
+        private bool? _firstPlayer;
+        private int _winningSetLength;
+
+        private readonly List<int> _excludedFieldsForPlayer = new List<int>();
+        private readonly List<int> _excludedFieldsForOponent = new List<int>();
 
         public NaiveStrategy(IReadOnlyList<int> boardValues, int k)
         {
@@ -23,8 +27,11 @@ namespace SzemerediGame.Strategies
 
             if (n > MaxNumber) throw new ArgumentOutOfRangeException();
 
+            _winningSetLength = k;
+
             var allCombinationsCount = Combination_n_of_k(n, k);
-            _allMovesSet = new List<long>();
+            //_allMovesSet = new List<long>();
+            _allMovesSet = new Dictionary<long, ushort>();
 
             var a = (long) Math.Pow(2, k) - 1; 
 
@@ -41,7 +48,7 @@ namespace SzemerediGame.Strategies
                     }
                     p++;
                 }
-                if(flag && ArithmeticProgression.IsThereAnyProgressionOutThere(CreateIndexArrayFromBits(a), k)) _allMovesSet.Add(a);
+                if(flag && ArithmeticProgression.IsThereAnyProgressionOutThere(CreateIndexArrayFromBits(a), k)) _allMovesSet.Add(a, 0);
 
                 a = next_set_of_n_elements(a);
             }
@@ -49,41 +56,88 @@ namespace SzemerediGame.Strategies
 
         public GameMove Move(Board board, ComputerPlayer player)
         {
+            // TODO check situation when this strategy starts game
+
+            // Oponent
+
             var allPlayerFields = board.BoardArray.Where(gf => gf.IsAssigned && gf.Player == player).Select(gf => gf.Value).ToList();
+            var availableMovesForOponent = new List<long>();
+
+            if (allPlayerFields.Any())
+            {
+                var newExcludedFieldForOponent = allPlayerFields.Except(_excludedFieldsForOponent).First();
+                _excludedFieldsForOponent.Add(newExcludedFieldForOponent);
+
+                availableMovesForOponent = _allMovesSet.Where(m => m.Value == 0 || m.Value == 2).Select(m => m.Key).ToList();
+                var unavailableMovesForOponent = availableMovesForOponent.Where(move => (move & (1 << (newExcludedFieldForOponent - 1))) > 0).ToList();
+
+                foreach (var um in unavailableMovesForOponent)
+                {
+                    _allMovesSet[um] += 1;
+                }
+            }
+
+            // Player
+
             var allOpponentFields = board.BoardArray.Where(gf => gf.IsAssigned && gf.Player != player).Select(gf => gf.Value).ToList();
+            var availableMovesForPlayer = new List<long>();
 
-            var newExcludedField = allOpponentFields.Except(_excludedFields).First();
-            _excludedFields.Add(newExcludedField);
+            if (allOpponentFields.Any())
+            {
+                var newExcludedFieldForPlayer = allOpponentFields.Except(_excludedFieldsForPlayer).First();
+                _excludedFieldsForPlayer.Add(newExcludedFieldForPlayer);
 
-            var unavailableMoves = _allMovesSet.Where(move => (move & (1 << (newExcludedField - 1))) > 0).ToList();
-            _allMovesSet = _allMovesSet.Except(unavailableMoves).ToList();
-            
-            // TODO jesli nie ma juz dostepnych ruchow - odpal strategie blokujaca przeciwnika
-            
+                availableMovesForPlayer = _allMovesSet.Where(m => m.Value == 0 || m.Value == 1).Select(m => m.Key).ToList();
+                var unavailableMovesForPlayer = availableMovesForPlayer.Where(move => (move & (1 << (newExcludedFieldForPlayer - 1))) > 0).ToList();
+
+                foreach (var um in unavailableMovesForPlayer)
+                {
+                    _allMovesSet[um] += 2;
+                }
+            }
+
+            // Coefficients
+
+            var firstMove = _firstPlayer == null;
+            if (!_firstPlayer.HasValue) _firstPlayer = allPlayerFields.Count > allOpponentFields.Count;
+            var bias = firstMove && !_firstPlayer.Value ? 2 : 0;
+            var goForWin = !firstMove && !availableMovesForOponent.Any(); // TODO Uwzglednic jak blisko jestesmy wygranej
+            var blockOpponent = !availableMovesForPlayer.Any(); // TODO Uwzglednic jak blisko jest wygranej przeciwnik
+
+
+            // Selecting best move
+            // TODO Uwzglednic wybieranie ruchu takze na podstawie tego jak bardzo zaszkodzimy przeciwnikowi
+            // TODO Uwzglednic sytuacje kiedy przeciwnik ma x_____y i może na 100% wygrać
             var max = int.MinValue;
             var bestMove = long.MinValue;
 
-            foreach (var move in _allMovesSet)
+            var availableMovesForBoth = _allMovesSet.Where(m => m.Value != 3).Select(m => m.Key);
+            foreach (var move in availableMovesForBoth)
             {
-                var correctNumbersCount = allPlayerFields.Count(field => (move & (1 << (field - 1))) > 0);
+                var correctNumbersCountForPlayer = blockOpponent ? 0 : allPlayerFields.Count(field => (move & (1 << (field - 1))) > 0);
 
-                if (correctNumbersCount > max)
+                if (_allMovesSet[move] < 2) correctNumbersCountForPlayer += bias;
+
+                var correctNumbersCountForOponent = goForWin ? 0 : allOpponentFields.Count(field => (move & (1 << (field - 1))) > 0);
+
+                if (correctNumbersCountForPlayer + correctNumbersCountForOponent > max)
                 {
-                    max = correctNumbersCount;
+                    max = correctNumbersCountForPlayer + correctNumbersCountForOponent;
                     bestMove = move;
                 }
             }
 
-            // TODO do best move dodaj sprawdzanie blokowania przeciwnika: wsp_1 * correctNumbersCount + wsp_2 * (1 - blockedNumbersCount)
-            // TODO uwzglednic czy startujemy jako pierwsi czy jako drudzy
+            // Selecting first empty field from best move
 
             for (var p = 0; p < MaxNumber; p++)
             {
-                if ((bestMove & (1 << p)) > 0 && !allPlayerFields.Contains(p+1))
+                if ((bestMove & (1 << p)) > 0 && !allPlayerFields.Contains(p+1) && !allOpponentFields.Contains(p + 1))
                 {
                     return new GameMove { Index = _boardValues.FindIndex(b => b == p + 1) };
                 }
             }
+
+            // If somewhing above went wrong (error?) then get first empty field
 
             return new GameMove { Index = _boardValues.FindIndex(b => b == board.BoardArray.First(bo => !bo.IsAssigned).Value) };
         }

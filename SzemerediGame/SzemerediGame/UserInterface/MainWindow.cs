@@ -72,10 +72,6 @@ namespace SzemerediGame.UserInterface
                     break;
             }
 
-            var player1 = new ComputerPlayer(ConsoleColor.Red, new RandomStrategy());
-            //var player2 = new ComputerPlayer(ConsoleColor.Green, new ImprovedRandomStrategy(k.Value));
-            var player2 = new ComputerPlayer(ConsoleColor.Green, new NaiveStrategy(boardValues, k.Value));
-
             Console.WriteLine($"Parametry rozgrywki:\nIlość liczb: {boardValues?.Length}\nZwycięska długość ciągu: {k}\nLiczba graczy: 2\n");
             Console.WriteLine("Gracz czerwony gra strategią zupełnie losową (wybiera dowolne z niezajętych jeszcze pól).\n" +
                               "Gracz zielony gra usprawnioną strategią losową tzn.:\n" +
@@ -84,6 +80,10 @@ namespace SzemerediGame.UserInterface
 
             do
             {
+                var player1 = new ComputerPlayer(ConsoleColor.Red, new RandomStrategy());
+                //var player2 = new ComputerPlayer(ConsoleColor.Green, new ImprovedRandomStrategy(k.Value));
+                var player2 = new ComputerPlayer(ConsoleColor.Green, new NaiveStrategy(boardValues, k.Value));
+
                 var game = new GameWithOutput(player1, player2, boardValues, k.Value);
                 game.Start();
 
