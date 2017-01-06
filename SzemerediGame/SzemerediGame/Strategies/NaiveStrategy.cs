@@ -56,8 +56,6 @@ namespace SzemerediGame.Strategies
 
         public GameMove Move(Board board, ComputerPlayer player)
         {
-            // TODO check situation when this strategy starts game
-
             var allUnassignedFields = board.BoardArray.Where(gf => !gf.IsAssigned).Select(gf => gf.Value).ToList();
 
             // Oponent
@@ -254,8 +252,6 @@ namespace SzemerediGame.Strategies
                     var x = availableMovesForOponent.Count(m => (m & (1 << (field - 1))) > 0); // Moves blocked for opponent
                     var y = availableMovesForPlayer.Count(m => (m & (1 << (field - 1))) > 0); // Moves allowing player win in future
 
-                    //if (_firstPlayer.Value && x + y > maxValueForField && x <= y ||
-                    //    !_firstPlayer.Value && x + y > maxValueForField && x >= y)
                     if (x + y > maxValue)
                     {
                         bestField = field;
@@ -268,105 +264,6 @@ namespace SzemerediGame.Strategies
                     Index = bestField - 1
                 };
             }
-            /*
-            // Selecting best move
-            // TODO Uwzglednic wybieranie ruchu takze na podstawie tego jak bardzo zaszkodzimy przeciwnikowi
-            var max = int.MinValue;
-            var potentialBestField = 0;
-            var bestMove = long.MinValue;
-            var ohNoYouAreLosingForBestMove = false;
-            var availableMovesForBoth = _allMovesSet.Where(m => m.Value != 3).Select(m => m.Key);
-            //TODO na poczatku sprawdzic czy nie jest to sytuacja podbramkowa, a dopiero jesli nie to wybierac najlepzy ruch najpierw szukajac najlepszego pola a potem ruchu zawierajacego to pole
-            foreach (var move in availableMovesForBoth)
-            {
-
-                // Checking how potential field can influence on my/enemy future possibilities of move
-                var list = CreateIndexArrayFromBits(move);
-                var bestFieldForMove = -1;
-                var maxValueForField = int.MinValue;
-                foreach (var a in list)
-                {
-                    if (!allPlayerFields.Contains(a) && !allOpponentFields.Contains(a))
-                    {
-                        // TODO jezeli zaczynam to chce max(x+y) tz x < y, w p.p. max(x+y) tz x > y
-                        var x = availableMovesForOponent.Count(m => (m & (1 << (a - 1))) > 0); // Moves blocked for opponent
-                        var y = availableMovesForPlayer.Count(m => (m & (1 << (a - 1))) > 0); // Moves allowing player win in future
-
-                        //if (_firstPlayer.Value && x + y > maxValueForField && x <= y ||
-                        //    !_firstPlayer.Value && x + y > maxValueForField && x >= y)
-                        if (x + y > maxValueForField)
-                        {
-                            bestFieldForMove = a;
-                            maxValueForField = x + y;
-                        }
-                    }
-                    
-                }
-
-                var correctNumbersCountForPlayer = blockOpponent ? 0 : allPlayerFields.Count(field => (move & (1 << (field - 1))) > 0);
-
-                if (_allMovesSet[move] < 2) correctNumbersCountForPlayer += bias;
-
-                var correctNumbersCountForOponent = goForWin ? 0 : allOpponentFields.Count(field => (move & (1 << (field - 1))) > 0);
-
-                var ohYesYouAreGoingToSmashHim = !firstMove && _winningSetLength - correctNumbersCountForPlayer <= 1;
-                //var fieldsForOponentToWin = _winningSetLength - correctNumbersCountForOponent;
-                var ohNoYouAreLosing = fieldsForOponentToWin == 1 ||
-                                       fieldsForOponentToWin <= 2 &&
-                                       CheckIfThisIsEdgeSituation(move, allOpponentFields.Min(), allOpponentFields.Max(), allOpponentFields.Count);
-
-                var endingCondition = ohYesYouAreGoingToSmashHim ? int.MaxValue : (ohNoYouAreLosing ? _winningSetLength : 0);
-
-
-                if (correctNumbersCountForPlayer + correctNumbersCountForOponent + endingCondition > max)
-                {
-                    max = correctNumbersCountForPlayer + correctNumbersCountForOponent + endingCondition;
-                    potentialBestField = bestFieldForMove;
-                    bestMove = move;
-                    ohNoYouAreLosingForBestMove = ohNoYouAreLosing;
-                }
-            }
-            
-            // Selecting available fields for best move
-
-            if (ohNoYouAreLosingForBestMove)
-            {
-                var availableFieldsForBestMove = new List<int>();
-                for (var p = 0; p < Msb((int)bestMove); p++)
-                {
-                    if ((bestMove & (1 << p)) > 0 && !allPlayerFields.Contains(p + 1) && !allOpponentFields.Contains(p + 1))
-                    {
-                        availableFieldsForBestMove.Add(_boardValues.FindIndex(b => b == p + 1));
-                    }
-                }
-
-                // Selecting field closest to the center from all available fields
-
-
-                var minValue = double.MaxValue;
-                int? closestToTheCenter = null;
-
-                foreach (var am in availableFieldsForBestMove)
-                {
-                    var value = Math.Abs((double)_boardValues.Count / 2 - _boardValues[am]);
-                    if (value < minValue)
-                    {
-                        minValue = value;
-                        closestToTheCenter = am;
-                    }
-                }
-
-                // If somewhing above went wrong (error?) then get first empty field
-
-                return new GameMove
-                {
-                    Index =
-                        closestToTheCenter ??
-                        _boardValues.FindIndex(b => b == board.BoardArray.First(bo => !bo.IsAssigned).Value)
-                };
-            }
-            */
-            //return new GameMove { Index = potentialBestField };
         }
         
         private static long next_set_of_n_elements(long x)
