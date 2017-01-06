@@ -9,7 +9,6 @@ namespace SzemerediGame.Strategies
 {
     internal class NaiveStrategy : IGameStrategy
     {
-        private const int MaxNumber = 29;
 
         private readonly Dictionary<long, ushort> _allMovesSet;
         private readonly List<int> _boardValues;
@@ -24,8 +23,6 @@ namespace SzemerediGame.Strategies
         {
             _boardValues = boardValues.ToList();
             var n = boardValues[boardValues.Count - 1];
-
-            if (n > MaxNumber) throw new ArgumentOutOfRangeException();
 
             _winningSetLength = k;
 
@@ -110,11 +107,11 @@ namespace SzemerediGame.Strategies
 
                 if (correctNumbersCountForOponent > biggestNumberOfCorrectFieldsForOponent)
                 {
-                    if (CheckIfThisIsEdgeSituation(move, allOpponentFields.Min(), allOpponentFields.Max(), allOpponentFields.Count)) edgeSituation = true;
+                    if (allOpponentFields.Any() && CheckIfThisIsEdgeSituation(move, allOpponentFields.Min(), allOpponentFields.Max(), allOpponentFields.Count)) edgeSituation = true;
                     biggestNumberOfCorrectFieldsForOponent = correctNumbersCountForOponent;
                     closestMoveToWinForOponent = move;
                 }
-                else if (correctNumbersCountForOponent == biggestNumberOfCorrectFieldsForOponent &&
+                else if (correctNumbersCountForOponent == biggestNumberOfCorrectFieldsForOponent && allOpponentFields.Any() &&
                          CheckIfThisIsEdgeSituation(move, allOpponentFields.Min(), allOpponentFields.Max(), allOpponentFields.Count))
                 {
                     biggestNumberOfCorrectFieldsForOponent = correctNumbersCountForOponent;
@@ -160,7 +157,7 @@ namespace SzemerediGame.Strategies
             {
                 return new GameMove
                 {
-                    Index = _boardValues.FindIndex(b => b == board.BoardArray.First(bo => !bo.IsAssigned).Value)
+                    Index = ThrowErrorIfWrongField(board, _boardValues.FindIndex(b => b == board.BoardArray.First(bo => !bo.IsAssigned).Value))
                 };
             }
 
@@ -173,7 +170,7 @@ namespace SzemerediGame.Strategies
 
                 return new GameMove
                 {
-                    Index = bestMoveFields.Except(allPlayerFields).First() - 1// Should be only EXACTLY ONE
+                    Index = ThrowErrorIfWrongField(board, _boardValues.FindIndex(b => b == bestMoveFields.Except(allPlayerFields).First()))// Should be only EXACTLY ONE
                 };
             }
 
@@ -197,7 +194,7 @@ namespace SzemerediGame.Strategies
 
                 return new GameMove
                 {
-                    Index = bestField - 1
+                    Index = ThrowErrorIfWrongField(board, _boardValues.FindIndex(b => b == bestField))
                 };
             }
 
@@ -209,7 +206,7 @@ namespace SzemerediGame.Strategies
 
                 return new GameMove
                 {
-                    Index = bestMoveFields.Except(allOpponentFields).First() - 1 // Should be only EXACTLY ONE
+                    Index = ThrowErrorIfWrongField(board, _boardValues.FindIndex(b => b == bestMoveFields.Except(allOpponentFields).First())) // Should be only EXACTLY ONE
                 };
             }
 
@@ -237,8 +234,7 @@ namespace SzemerediGame.Strategies
 
                 return new GameMove
                 {
-                    Index = closestToTheCenter - 1 ??
-                            _boardValues.FindIndex(b => b == board.BoardArray.First(bo => !bo.IsAssigned).Value)
+                    Index = ThrowErrorIfWrongField(board, _boardValues.FindIndex(b => b == (closestToTheCenter ?? _boardValues.FindIndex(bv => bv == board.BoardArray.First(bo => !bo.IsAssigned).Value))))
                 };
             }
 
@@ -261,11 +257,19 @@ namespace SzemerediGame.Strategies
 
                 return new GameMove
                 {
-                    Index = bestField - 1
+                    Index = ThrowErrorIfWrongField(board, _boardValues.FindIndex(b => b == bestField))
                 };
             }
         }
-        
+
+        private static int ThrowErrorIfWrongField(Board board, int field)
+        {
+            if (board.BoardArray[field].IsAssigned)
+                throw new ArgumentException();
+
+            return field;
+        }
+
         private static long next_set_of_n_elements(long x)
         {
             if (x == 0) return 0;
