@@ -1,5 +1,8 @@
-﻿using Colorful;
+﻿using System;
+using Colorful;
 using SzemerediGame.Algorithms;
+using SzemerediGame.Logic;
+using SzemerediGame.Strategies;
 using SzemerediGame.UserInterface;
 
 namespace SzemerediGame
@@ -39,8 +42,16 @@ namespace SzemerediGame
             //Console.WriteLine(r2);
             //Console.WriteLine(r3);
 
-            var mainWindow = new MainWindow();
-            mainWindow.DrawGame();
+            //var mainWindow = new MainWindow();
+            //mainWindow.DrawGame();
+
+
+            var player1 = new ComputerPlayer(ConsoleColor.Red, new NaiveStrategy(new[] { 1, 2, 3, 4, 5, 6 }, 3));
+            //var player2 = new ComputerPlayer(ConsoleColor.Green, new ImprovedRandomStrategy(k.Value));
+            var player2 = new ComputerPlayer(ConsoleColor.Green, new MinMaxStrategy());
+
+            var game = new GameWithOutput(player1, player2, new[] {1,2,3,4,5,6}, 3);
+            game.Start();
         }
     }
 }
