@@ -11,7 +11,7 @@ namespace SzemerediGame.Strategies
     {
         private readonly int _winningSequenceLength;
 
-        private const int Depth = 6;
+        private const int Depth = 2;
 
         private ComputerPlayer _maxPlayer;
         private ComputerPlayer _minPlayer;

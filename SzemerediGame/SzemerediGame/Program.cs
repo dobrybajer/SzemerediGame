@@ -4,6 +4,7 @@ using SzemerediGame.Algorithms;
 using SzemerediGame.Logic;
 using SzemerediGame.Strategies;
 using SzemerediGame.UserInterface;
+using Console = System.Console;
 
 namespace SzemerediGame
 {
@@ -46,12 +47,22 @@ namespace SzemerediGame
             //mainWindow.DrawGame();
 
 
-            var player1 = new ComputerPlayer(ConsoleColor.Red, new NaiveStrategy(new[] { 1, 2, 3, 4, 5, 6 }, 3));
+            var player1 = new ComputerPlayer(ConsoleColor.Red, new RandomStrategy());
             //var player2 = new ComputerPlayer(ConsoleColor.Green, new ImprovedRandomStrategy(k.Value));
             var player2 = new ComputerPlayer(ConsoleColor.Green, new MinMaxStrategy());
 
-            var game = new GameWithOutput(player1, player2, new[] {1,2,3,4,5,6}, 3);
-            game.Start();
+            //var game = new GameWithOutput(player1, player2, new[] {1,2,3,4,5,6,7,8,9}, 3);
+            //game.Start();
+
+            Board board = new Board(new[] {1, 2, 3, 4, 5, 6, 7, 8, 9}, 3);
+            board.MakeMove(new GameMove {Index = 1}, player1);
+            board.MakeMove(new GameMove { Index = 2 }, player2);
+            board.MakeMove(new GameMove { Index = 5 }, player1);
+
+            GameMove move = new MinMaxStrategy().Move(board, player2);
+
+            // move index should be set to 3 (zamaluj 4)
+            Console.WriteLine(move.Index);
         }
     }
 }
