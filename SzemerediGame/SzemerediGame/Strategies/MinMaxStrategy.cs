@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using SzemerediGame.Algorithms;
 using SzemerediGame.Interfaces;
 using SzemerediGame.Logic;
 
@@ -7,11 +9,22 @@ namespace SzemerediGame.Strategies
 {
     public class MinMaxStrategy : IGameStrategy
     {
+        private readonly int _winningSequenceLength;
 
         private const int Depth = 6;
 
         private ComputerPlayer _maxPlayer;
         private ComputerPlayer _minPlayer;
+
+        public MinMaxStrategy()
+        {
+            _winningSequenceLength = 0;
+        }
+
+        public MinMaxStrategy(int k)
+        {
+            _winningSequenceLength = k;
+        }
 
         public GameMove Move(Board board, ComputerPlayer player)
         {
@@ -29,13 +42,54 @@ namespace SzemerediGame.Strategies
             return opponent ?? new ComputerPlayer();
         }
 
-        private static int Heuristic(Board board, int depth)
+        private void CountPotentialOneMoveWinsAndLoses(Board board, out int wins, out int loses)
         {
+            wins = 0;
+            loses = 0;
+
+            var allPlayerFields = board.BoardArray.Where(gf => gf.IsAssigned && gf.Player == _maxPlayer).Select(gf => gf.Value);
+            var allOpponentFields = board.BoardArray.Where(gf => gf.IsAssigned && gf.Player != _maxPlayer).Select(gf => gf.Value);
+
+            foreach (GameField gameField in board.BoardArray)
+            {
+                if (gameField.IsAssigned) continue;
+
+                var playerFieldsList = allPlayerFields.ToList();
+                playerFieldsList.Add(gameField.Value);
+                playerFieldsList.Sort();
+
+                var opponentFieldsList = allOpponentFields.ToList();
+                opponentFieldsList.Add(gameField.Value);
+                opponentFieldsList.Sort();
+
+                if (ArithmeticProgression.IsThereAnyProgressionOutThere(playerFieldsList.ToArray(), _winningSequenceLength)) wins++;
+
+                if (ArithmeticProgression.IsThereAnyProgressionOutThere(opponentFieldsList.ToArray(), _winningSequenceLength)) loses++;
+            }
+        }
+
+        private int Heuristic(Board board, int depth)
+        {
+            var isOpponent = IsOpponentMove(depth);
+
             var value = 0;
 
             if (board.WinningSet != null && board.WinningSet.Length > 0)
             {
-                value = IsOpponentMove(depth) ? -100 : 100;
+                // NOTE If this is my move now and there already is a winning sequence, it means that the it's the opponent
+                // who have the winning sequence. Otherwise, if the opponent is moving now and there already is a winning
+                // sequence, it means that I have created it.
+                value = isOpponent ? -100 : 100;
+            }
+            else
+            {
+                int oneMoveWins;
+                int oneMoveLoses;
+
+                CountPotentialOneMoveWinsAndLoses(board, out oneMoveWins, out oneMoveLoses);
+
+                value += oneMoveWins * 50;
+                value -= oneMoveLoses * 50;
             }
 
             // TODO tu reszta do zaimplementowania
