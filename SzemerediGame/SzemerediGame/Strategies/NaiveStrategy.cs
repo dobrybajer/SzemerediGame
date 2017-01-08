@@ -9,7 +9,8 @@ namespace SzemerediGame.Strategies
 {
     internal class NaiveStrategy : IGameStrategy
     {
-
+        private const long MaxCombinationCount = 601080390;
+        
         private readonly Dictionary<long, ushort> _allMovesSet;
         private readonly List<int> _boardValues;
 
@@ -22,11 +23,16 @@ namespace SzemerediGame.Strategies
         public NaiveStrategy(IReadOnlyList<int> boardValues, int k)
         {
             _boardValues = boardValues.ToList();
-            var n = boardValues[boardValues.Count - 1];
 
             _winningSetLength = k;
 
-            var allCombinationsCount = Combination_n_of_k(n, k);
+            if(boardValues.Count > 64 || boardValues[boardValues.Count - 1] > 64)
+                throw new ArgumentOutOfRangeException(nameof(boardValues), "Too large input!");
+
+            var allCombinationsCount = Combination_n_of_k(boardValues.Count, k);
+            
+            if(allCombinationsCount >= MaxCombinationCount)
+                throw new ArgumentOutOfRangeException(nameof(k), "Too large input!");
 
             _allMovesSet = new Dictionary<long, ushort>();
 
@@ -34,18 +40,14 @@ namespace SzemerediGame.Strategies
 
             for (long i = 0; i < allCombinationsCount; i++)
             {
-                var flag = true;
-                var p = 0;
-                while (1 << p <= a)
+                var indices = CreateIndexArrayFromBits(a);
+                var values = indices.Select(ind => boardValues[ind - 1]).ToList();
+
+                if (ArithmeticProgression.IsThereAnyProgressionOutThere(values.ToArray(), k))
                 {
-                    if ((a & (1 << p)) > 0 && !boardValues.Contains(p+1))
-                    {
-                        flag = false;
-                        break;
-                    }
-                    p++;
+                    var value = values.Aggregate<int, long>(0, (current, v) => current | (long) 1 << (v - 1));
+                    _allMovesSet.Add(value, 0);
                 }
-                if(flag && ArithmeticProgression.IsThereAnyProgressionOutThere(CreateIndexArrayFromBits(a), k)) _allMovesSet.Add(a, 0);
 
                 a = next_set_of_n_elements(a);
             }
@@ -65,7 +67,7 @@ namespace SzemerediGame.Strategies
                 var newExcludedFieldForOponent = allPlayerFields.Except(_excludedFieldsForOponent).First();
                 _excludedFieldsForOponent.Add(newExcludedFieldForOponent);
 
-                var unavailableMovesForOponent = availableMovesForOponent.Where(move => (move & (1 << (newExcludedFieldForOponent - 1))) > 0).ToList();
+                var unavailableMovesForOponent = availableMovesForOponent.Where(move => (move & ((long)1 << (newExcludedFieldForOponent - 1))) > 0).ToList();
 
                 foreach (var um in unavailableMovesForOponent)
                 {
@@ -85,7 +87,7 @@ namespace SzemerediGame.Strategies
                 var newExcludedFieldForPlayer = allOpponentFields.Except(_excludedFieldsForPlayer).First();
                 _excludedFieldsForPlayer.Add(newExcludedFieldForPlayer);
 
-                var unavailableMovesForPlayer = availableMovesForPlayer.Where(move => (move & (1 << (newExcludedFieldForPlayer - 1))) > 0).ToList();
+                var unavailableMovesForPlayer = availableMovesForPlayer.Where(move => (move & ((long)1 << (newExcludedFieldForPlayer - 1))) > 0).ToList();
 
                 foreach (var um in unavailableMovesForPlayer)
                 {
@@ -103,7 +105,7 @@ namespace SzemerediGame.Strategies
 
             foreach (var move in availableMovesForOponent)
             {
-                var correctNumbersCountForOponent = allOpponentFields.Count(field => (move & (1 << (field - 1))) > 0);
+                var correctNumbersCountForOponent = allOpponentFields.Count(field => (move & ((long)1 << (field - 1))) > 0);
 
                 if (correctNumbersCountForOponent > biggestNumberOfCorrectFieldsForOponent)
                 {
@@ -127,7 +129,7 @@ namespace SzemerediGame.Strategies
            
             foreach (var move in availableMovesForPlayer)
             {
-                var correctNumbersCountForPlayer = allPlayerFields.Count(field => (move & (1 << (field - 1))) > 0);
+                var correctNumbersCountForPlayer = allPlayerFields.Count(field => (move & ((long)1 << (field - 1))) > 0);
 
                 if (correctNumbersCountForPlayer > biggestNumberOfCorrectFieldsForPlayer)
                 {
@@ -146,7 +148,7 @@ namespace SzemerediGame.Strategies
             // Coefficients
             
             var itIsADraw = !firstMove && !availableMovesForOponent.Any() && !availableMovesForPlayer.Any();
-            var goForWin = !firstMove && !availableMovesForOponent.Any() || fieldsForPlayerToWin == 1;
+            var goForWin = !firstMove && !availableMovesForOponent.Any() && availableMovesForPlayer.Any() || fieldsForPlayerToWin == 1 && availableMovesForPlayer.Any();
             var blockOponentNoMoves = !availableMovesForPlayer.Any();
             var blockOponentSoCloseToLose = fieldsForOponentToWin == 1;
             var blockOponentEdgeSituation = fieldsForOponentToWin == 2 && edgeSituation;
@@ -183,7 +185,7 @@ namespace SzemerediGame.Strategies
 
                 foreach (var field in allUnassignedFields)
                 {
-                    var value = availableMovesForOponent.Count(m => (m & (1 << (field - 1))) > 0);
+                    var value = availableMovesForOponent.Count(m => (m & ((long)1 << (field - 1))) > 0);
 
                     if (value > maxValue)
                     {
@@ -245,8 +247,8 @@ namespace SzemerediGame.Strategies
 
                 foreach (var field in allUnassignedFields)
                 {
-                    var x = availableMovesForOponent.Count(m => (m & (1 << (field - 1))) > 0); // Moves blocked for opponent
-                    var y = availableMovesForPlayer.Count(m => (m & (1 << (field - 1))) > 0); // Moves allowing player win in future
+                    var x = availableMovesForOponent.Count(m => (m & ((long)1 << (field - 1))) > 0); // Moves blocked for opponent
+                    var y = availableMovesForPlayer.Count(m => (m & ((long)1 << (field - 1))) > 0); // Moves allowing player win in future
 
                     if (x + y > maxValue)
                     {
@@ -311,22 +313,25 @@ namespace SzemerediGame.Strategies
             var list = new List<int>();
 
             var p = 0;
-            while (1 << p < value)
+            var shift = (long)1 << p;
+            while (shift < value)
             {
-                if ((value & (1 << p)) > 0)
+                if ((value & shift) > 0)
                     list.Add(p + 1);
                 p++;
+
+                shift = (long)1 << p;
             }
 
             return list.ToArray();
         }
 
-        private static int Lsb(int v)
+        private static int Lsb(long v)
         {
             return (int)Math.Log(v - (v & (v - 1)), 2) + 1;
         }
 
-        private static int Msb(int x)
+        private static int Msb(long x)
         {
             x |= (x >> 1);
             x |= (x >> 2);
@@ -338,8 +343,8 @@ namespace SzemerediGame.Strategies
 
         private static bool CheckIfThisIsEdgeSituation(long move, int minValue, int maxValue, int count)
         {
-            var lsbValue = Lsb((int)move);
-            var msbValue = Msb((int)move);
+            var lsbValue = Lsb(move);
+            var msbValue = Msb(move);
 
             var diff = msbValue - lsbValue - 1;
 

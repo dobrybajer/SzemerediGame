@@ -62,13 +62,15 @@ namespace SzemerediGame.UserInterface
             int[] boardValues = null;
             int? k = null;
 
+            ComputerPlayer player1 = null, player2 = null;
+
             switch (subPressedKey.Key)
             {
                 case ConsoleKey.D1:
-                    boardValues = HandleRandomBoardValues(gameInput, out k);
+                    boardValues = HandleRandomBoardValues(gameInput, out k, out player1, out player2);
                     break;
                 case ConsoleKey.D2:
-                    boardValues = HandleExplicitBoardValues(gameInput, out k);
+                    boardValues = HandleExplicitBoardValues(gameInput, out k, out player1, out player2);
                     break;
             }
 
@@ -80,10 +82,6 @@ namespace SzemerediGame.UserInterface
 
             do
             {
-                var player1 = new ComputerPlayer(ConsoleColor.Red, new RandomStrategy());
-                //var player2 = new ComputerPlayer(ConsoleColor.Green, new ImprovedRandomStrategy(k.Value));
-                var player2 = new ComputerPlayer(ConsoleColor.Green, new NaiveStrategy(boardValues, k.Value));
-
                 var game = new GameWithOutput(player1, player2, boardValues, k.Value);
                 game.Start();
 
@@ -96,33 +94,46 @@ namespace SzemerediGame.UserInterface
             menu.WriteContent();
         }
 
-        private static int[] HandleRandomBoardValues(GameInput gameInput, out int? k)
+        private static int[] HandleRandomBoardValues(GameInput gameInput, out int? k, out ComputerPlayer player1, out ComputerPlayer player2)
         {
-            int? n = null, a = null, b = null;
+            int? n = null, a = null;
             k = null;
+            player1 = null;
+            player2 = null;
+            int[] result = null;
 
             var correctParameters = false;
             while (!correctParameters)
             {
                 try
                 {
-                    n = k = a = b = null;
+                    n = k = a = null;
 
                     gameInput.WriteLine(Content.GiveLength);
-                    n = int.Parse((string)gameInput.GetContent());
+                    n = int.Parse((string) gameInput.GetContent());
 
                     gameInput.WriteLine(Content.GiveArithmeticProgressionLength);
-                    k = int.Parse((string)gameInput.GetContent());
+                    k = int.Parse((string) gameInput.GetContent());
 
                     gameInput.WriteLine(Content.GiveLower);
-                    a = int.Parse((string)gameInput.GetContent());
+                    a = int.Parse((string) gameInput.GetContent());
 
                     gameInput.WriteLine(Content.GiveUpper);
-                    b = int.Parse((string)gameInput.GetContent());
+                    int? b = int.Parse((string) gameInput.GetContent());
 
                     GameHelpers.Guard(n > 1, k > 1, n >= k, a < b);
 
+                    result = GameHelpers.GenerateArray(n.Value, a.Value, b.Value);
+
+                    player1 = new ComputerPlayer(ConsoleColor.Red, new RandomStrategy());
+                    player2 = new ComputerPlayer(ConsoleColor.Green, new NaiveStrategy(result, k.Value));
+
                     correctParameters = true;
+                }
+                catch (ArgumentException ae)
+                {
+                    Object.ClearLines(n == null ? 3 : (k == null ? 5 : (a == null ? 7 : 9)));
+                    gameInput.WriteLineWrongParameter(ae.ParamName);
                 }
                 catch
                 {
@@ -133,14 +144,17 @@ namespace SzemerediGame.UserInterface
 
             Object.ClearLines(8);
 
-            return GameHelpers.GenerateArray(n.Value, a.Value, b.Value);
+            return result;
         }
 
-        private static int[] HandleExplicitBoardValues(GameInput gameInput, out int? k)
+        private static int[] HandleExplicitBoardValues(GameInput gameInput, out int? k, out ComputerPlayer player1, out ComputerPlayer player2)
         {
             var correctParameters = false;
             int[] setArray = null;
             k = null;
+            player1 = null;
+            player2 = null;
+            int[] result = null;
 
             while (!correctParameters)
             {
@@ -158,8 +172,17 @@ namespace SzemerediGame.UserInterface
 
                     GameHelpers.Guard(GameHelpers.Prepare(setArray).Length > 1, k > 1);
 
+                    result = GameHelpers.Prepare(setArray);
+
+                    player1 = new ComputerPlayer(ConsoleColor.Red, new RandomStrategy());
+                    player2 = new ComputerPlayer(ConsoleColor.Green, new NaiveStrategy(result, k.Value));
 
                     correctParameters = true;
+                }
+                catch (ArgumentException ae)
+                {
+                    Object.ClearLines(setArray == null ? 3 : 5);
+                    gameInput.WriteLineWrongParameter(ae.ParamName);
                 }
                 catch
                 {
@@ -169,7 +192,7 @@ namespace SzemerediGame.UserInterface
             }
 
             Object.ClearLines(5);
-            return GameHelpers.Prepare(setArray);
+            return result;
         }
 
         private static class Content

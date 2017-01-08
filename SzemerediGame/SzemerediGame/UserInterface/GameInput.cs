@@ -14,5 +14,10 @@ namespace SzemerediGame.UserInterface
         {
             WriteLine("Niepoprawnie podane dane wejściowe, proszę spróbować ponownie.", Color.DarkRed);
         }
+
+        public void WriteLineWrongParameter(string argument)
+        {
+            WriteLine("Zbyt duża wartość danych wejściowych dla strategii gracza \"NaiveStrategy\": " + argument, Color.DarkRed);
+        }
     }
 }
