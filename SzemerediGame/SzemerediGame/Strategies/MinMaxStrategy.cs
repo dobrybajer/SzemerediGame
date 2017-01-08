@@ -76,6 +76,30 @@ namespace SzemerediGame.Strategies
             if (board.WinningSet != null && board.WinningSet.Length > 0)
             {
                 value = isOpponent ? -10000 : 10000;
+
+                // Count how many other options are there for winning / losing (except the current winning set).
+                int totalOtherWins = 0;
+                int totalOtherLoses = 0;
+
+                for (int i = 0; i < board.BoardArray.Length; i++)
+                {
+                    if (!board.WinningSet.Contains(board.BoardArray[i].Value)) continue;
+
+                    Board tempBoard = (Board)board.Clone();
+
+                    int otherWins;
+                    int otherLoses;
+
+                    tempBoard.BoardArray[i].AssignToField(null);
+
+                    CountPotentialOneMoveWinsAndLoses(tempBoard, out otherWins, out otherLoses);
+
+                    totalOtherWins += otherWins > 0 ? otherWins - 1 : otherWins;
+                    totalOtherLoses += otherLoses > 0 ? otherLoses - 1 : otherLoses;
+                }
+
+                value += totalOtherWins * 60;
+                value -= totalOtherLoses * 60;
             }
             else
             {

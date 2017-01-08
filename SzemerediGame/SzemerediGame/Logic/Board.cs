@@ -34,7 +34,7 @@ namespace SzemerediGame.Logic
             BoardArray = new GameField[board.Count];
 
             for (var i = 0; i < board.Count; i++)
-                BoardArray[i] = board[i];
+                BoardArray[i] = board[i].Clone();
 
             _winningSeriesLength = winningSeriesLength;
         }

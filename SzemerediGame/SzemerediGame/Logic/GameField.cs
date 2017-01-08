@@ -16,6 +16,9 @@
             Player = player;
         }
 
-
+        public GameField Clone()
+        {
+            return new GameField(Value) {Player = Player};
+        }
     }
 }
