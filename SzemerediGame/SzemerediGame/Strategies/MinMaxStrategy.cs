@@ -11,7 +11,7 @@ namespace SzemerediGame.Strategies
     {
         private readonly int _winningSequenceLength;
 
-        private const int Depth = 2;
+        private const int Depth = 10;
 
         private ComputerPlayer _maxPlayer;
         private ComputerPlayer _minPlayer;
@@ -30,9 +30,8 @@ namespace SzemerediGame.Strategies
         {
             _maxPlayer = player;
             _minPlayer = FindOpponentPlayer(board, player);
-            var move = -1;
 
-            AlphaBeta((Board)board.Clone(), Depth, int.MinValue, int.MaxValue, ref move);
+            var move = AlphaBeta((Board)board.Clone(), Depth, int.MinValue, int.MaxValue);
             return new GameMove() { Index = move };
         }
 
@@ -47,8 +46,8 @@ namespace SzemerediGame.Strategies
             wins = 0;
             loses = 0;
 
-            var allPlayerFields = board.BoardArray.Where(gf => gf.IsAssigned && gf.Player == _maxPlayer).Select(gf => gf.Value);
-            var allOpponentFields = board.BoardArray.Where(gf => gf.IsAssigned && gf.Player != _maxPlayer).Select(gf => gf.Value);
+            var allPlayerFields = board.BoardArray.Where(gf => gf.IsAssigned && gf.Player == _maxPlayer).Select(gf => gf.Value).ToList();
+            var allOpponentFields = board.BoardArray.Where(gf => gf.IsAssigned && gf.Player != _maxPlayer).Select(gf => gf.Value).ToList();
 
             foreach (GameField gameField in board.BoardArray)
             {
@@ -76,10 +75,7 @@ namespace SzemerediGame.Strategies
 
             if (board.WinningSet != null && board.WinningSet.Length > 0)
             {
-                // NOTE If this is my move now and there already is a winning sequence, it means that the it's the opponent
-                // who have the winning sequence. Otherwise, if the opponent is moving now and there already is a winning
-                // sequence, it means that I have created it.
-                value = isOpponent ? -100 : 100;
+                value = isOpponent ? -10000 : 10000;
             }
             else
             {
@@ -92,37 +88,41 @@ namespace SzemerediGame.Strategies
                 value -= oneMoveLoses * 50;
             }
 
-            // TODO tu reszta do zaimplementowania
-            // TODO atakowanie, blokowanie
+            // TODO ewentualne usprawnienia do heurystyki
+            // preferencja centralnych pól itp
 
             return value;
         }
 
-        private int AlphaBeta(Board board, int depth, int alpha, int beta, ref int move)
+        private int AlphaBeta(Board board, int depth, int alpha, int beta)
         {
             var isOpponent = IsOpponentMove(depth);
 
             if (depth == 0 || board.BoardArray.All(x => x.IsAssigned) || (board.WinningSet != null && board.WinningSet.Length > 0))
             {
+                // NOTE If this is my move now and there already is a winning sequence, it means that the it's the opponent
+                // who have the winning sequence. Otherwise, if the opponent is moving now and there already is a winning
+                // sequence, it means that I have created it.
                 return Heuristic(board, depth + 1);
             }
 
-            return isOpponent ? MakeMinMove(board, depth, alpha, beta, ref move) : MakeMaxMove(board, depth, alpha, beta, ref move);
+            return isOpponent ? MakeMinMove(board, depth, alpha, beta) : MakeMaxMove(board, depth, alpha, beta);
         }
 
-        private int MakeMaxMove(Board board, int depth, int alpha, int beta, ref int move)
+        private int MakeMaxMove(Board board, int depth, int alpha, int beta)
         {
+            var move = -1;
             foreach (var index in GetAllAvaliableMoves(board))
             {
                 var gameMove = new GameMove() { Index = index };
                 board.MakeMove(gameMove, _maxPlayer);
 
-                var value = AlphaBeta(board, depth - 1, alpha, beta, ref move);
+                var value = AlphaBeta(board, depth - 1, alpha, beta);
 
                 if (value > alpha)
                 {
-                    alpha = value;
                     move = index;
+                    alpha = value;
                 }
 
                 board.ClearMove(gameMove);
@@ -130,22 +130,24 @@ namespace SzemerediGame.Strategies
                     break;
             }
 
+            if (depth == Depth)
+                return move;
+
             return alpha;
         }
 
-        private int MakeMinMove(Board board, int depth, int alpha, int beta, ref int move)
+        private int MakeMinMove(Board board, int depth, int alpha, int beta)
         {
             foreach (var index in GetAllAvaliableMoves(board))
             {
                 var gameMove = new GameMove() { Index = index };
                 board.MakeMove(gameMove, _minPlayer);
 
-                var value = AlphaBeta(board, depth - 1, alpha, beta, ref move);
+                var value = AlphaBeta(board, depth - 1, alpha, beta);
 
                 if (value < beta)
                 {
                     beta = value;
-                    move = index;
                 }
 
                 board.ClearMove(gameMove);
@@ -161,7 +163,7 @@ namespace SzemerediGame.Strategies
             return depth % 2 != Depth % 2;
         }
 
-        private IEnumerable<int> GetAllAvaliableMoves(Board board)
+        private static IEnumerable<int> GetAllAvaliableMoves(Board board)
         {
             for (var i = 0; i < board.BoardArray.Length; i++)
             {
