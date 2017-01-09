@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using SzemerediGame.Algorithms;
 using SzemerediGame.Interfaces;
@@ -75,7 +74,7 @@ namespace SzemerediGame.Strategies
 
             if (board.WinningSet != null && board.WinningSet.Length > 0)
             {
-                value = isOpponent ? -10000 : 10000;
+                value = isOpponent ? -10000 + (Depth - depth) * 100 : 10000 + depth * 100;
 
                 // Count how many other options are there for winning / losing (except the current winning set).
                 int totalOtherWins = 0;
