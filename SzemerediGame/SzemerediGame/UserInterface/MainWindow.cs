@@ -82,6 +82,10 @@ namespace SzemerediGame.UserInterface
 
             do
             {
+                var player1 = new ComputerPlayer(ConsoleColor.Red, new NaiveStrategy(boardValues, k.Value));
+                //var player2 = new ComputerPlayer(ConsoleColor.Green, new ImprovedRandomStrategy(k.Value));
+                var player2 = new ComputerPlayer(ConsoleColor.Green, new MinMaxStrategy(k.Value));
+
                 var game = new GameWithOutput(player1, player2, boardValues, k.Value);
                 game.Start();
 

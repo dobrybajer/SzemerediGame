@@ -31,10 +31,10 @@ namespace SzemerediGame.Logic
 
         private Board(IReadOnlyList<GameField> board, int winningSeriesLength)
         {
-            BoardArray = new GameField[BoardArray.Length];
+            BoardArray = new GameField[board.Count];
 
             for (var i = 0; i < board.Count; i++)
-                BoardArray[i] = board[i];
+                BoardArray[i] = board[i].Clone();
 
             _winningSeriesLength = winningSeriesLength;
         }
@@ -58,7 +58,7 @@ namespace SzemerediGame.Logic
                 WinningSet = winningSet;
                 return GameState.Win;
             }
-            
+
             return IsTieMove() ? GameState.Tie : GameState.None;
         }
 
@@ -74,7 +74,7 @@ namespace SzemerediGame.Logic
 
             foreach (GameField gameField in BoardArray)
             {
-                if(gameField.IsAssigned && gameField.Player == player)
+                if (gameField.IsAssigned && gameField.Player == player)
                     tab.Add(gameField.Value);
             }
 
@@ -84,6 +84,13 @@ namespace SzemerediGame.Logic
         public object Clone()
         {
             return new Board(BoardArray, _winningSeriesLength);
+        }
+
+        public void ClearMove(GameMove move)
+        {
+            _movesCountSoFar -= 1;
+            WinningSet = null;
+            BoardArray[move.Index].AssignToField(null);
         }
     }
 }

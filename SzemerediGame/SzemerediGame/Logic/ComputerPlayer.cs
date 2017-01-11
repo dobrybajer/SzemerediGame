@@ -6,12 +6,8 @@ namespace SzemerediGame.Logic
     public class ComputerPlayer
     {
         public ConsoleColor Color { get; set; }
-
-        public int Value { get; set; }
-
+        
         private readonly IGameStrategy _gameStrategy;
-
-        public bool IsAssigned;
 
         public ComputerPlayer(ConsoleColor color, IGameStrategy gameStrategy)
         {
