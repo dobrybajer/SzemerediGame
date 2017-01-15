@@ -20,6 +20,11 @@ namespace SzemerediGame.Logic
             Board = new Board(set, winningSeriesLength);
         }
 
+        public void Reset()
+        {
+            Board.Reset();
+        }
+
         public virtual GameResult Start()
         {
             CreateTaskPausingGame();

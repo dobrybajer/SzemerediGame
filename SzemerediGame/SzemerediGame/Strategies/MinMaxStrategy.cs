@@ -34,6 +34,11 @@ namespace SzemerediGame.Strategies
             return new GameMove() { Index = move };
         }
 
+        public void Reset()
+        {
+            
+        }
+
         private ComputerPlayer FindOpponentPlayer(Board board, ComputerPlayer player)
         {
             var opponent = board.BoardArray.Where(x => x.IsAssigned).Select(x => x.Player).FirstOrDefault(p => p != player);

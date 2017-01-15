@@ -26,5 +26,10 @@ namespace SzemerediGame.Logic
             return _gameStrategy.Move(board, this);
         }
 
+        public virtual void Reset()
+        {
+            _gameStrategy.Reset();
+        }
+
     }
 }

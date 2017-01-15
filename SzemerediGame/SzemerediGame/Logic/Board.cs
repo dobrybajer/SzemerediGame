@@ -29,6 +29,14 @@ namespace SzemerediGame.Logic
             }
         }
 
+        public void Reset()
+        {
+            foreach (var t in BoardArray)
+            {
+                t.Player = null;
+            }
+        }
+
         private Board(IReadOnlyList<GameField> board, int winningSeriesLength)
         {
             BoardArray = new GameField[board.Count];

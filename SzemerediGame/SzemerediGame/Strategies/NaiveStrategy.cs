@@ -17,8 +17,8 @@ namespace SzemerediGame.Strategies
         private bool? _firstPlayer;
         private readonly int _winningSetLength;
 
-        private readonly List<int> _excludedFieldsForPlayer = new List<int>();
-        private readonly List<int> _excludedFieldsForOponent = new List<int>();
+        private List<int> _excludedFieldsForPlayer = new List<int>();
+        private List<int> _excludedFieldsForOponent = new List<int>();
 
         public NaiveStrategy(IReadOnlyList<int> boardValues, int k)
         {
@@ -264,6 +264,17 @@ namespace SzemerediGame.Strategies
             }
         }
 
+        public void Reset()
+        {
+            for (var i = 0; i < _allMovesSet.Count; ++i)
+            {
+                _allMovesSet[i] = 0;
+            }
+
+            _excludedFieldsForPlayer = new List<int>();
+            _excludedFieldsForOponent = new List<int>();
+        }
+
         private static int ThrowErrorIfWrongField(Board board, int field)
         {
             if (board.BoardArray[field].IsAssigned)
@@ -298,14 +309,6 @@ namespace SzemerediGame.Strategies
             }
 
             return r;
-        }
-
-        private static long BitCount(long n)
-        {
-            if (n <= 0) return 0;
-
-            var uCount = n - ((n >> 1) & 033333333333) - ((n >> 2) & 011111111111);
-            return ((uCount + (uCount >> 3)) & 030707070707) % 63;
         }
 
         private static int[] CreateIndexArrayFromBits(long value)

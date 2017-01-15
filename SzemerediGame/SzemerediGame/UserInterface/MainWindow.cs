@@ -12,8 +12,7 @@ namespace SzemerediGame.UserInterface
         {
             var header = new Header(Content.HeaderText);
             var menu = new Menu(Content.MenuOptionsText);
-            var gameInput = new GameInput(String.Empty);
-           // var description = new Description(Content.DescriptionContentText);
+            var gameInput = new GameInput(string.Empty);
 
             header.WriteContent();
             menu.WriteContent();
@@ -28,10 +27,6 @@ namespace SzemerediGame.UserInterface
                     case ConsoleKey.D1:
                         HandleStartGame(menu, gameInput, header);
                         break;
-                    //case ConsoleKey.D2:
-                    //    description.WriteContent();
-                    //    description.ClearContent();
-                    //    break;
                     case ConsoleKey.D2:
                         Environment.Exit(0);
                         break;
@@ -44,7 +39,7 @@ namespace SzemerediGame.UserInterface
             }
         }
 
-        private static void HandleStartGame(Menu menu, GameInput gameInput, Header header)
+        private static void HandleStartGame(Object menu, GameInput gameInput, Object header)
         {
             menu.ClearContent();
             gameInput.UpdateText(Content.SubMenuChoiceText);
@@ -75,22 +70,20 @@ namespace SzemerediGame.UserInterface
             }
 
             Console.WriteLine($"Parametry rozgrywki:\nIlość liczb: {boardValues?.Length}\nZwycięska długość ciągu: {k}\nLiczba graczy: 2\n");
-            Console.WriteLine("Gracz czerwony gra strategią zupełnie losową (wybiera dowolne z niezajętych jeszcze pól).\n" +
-                              "Gracz zielony gra usprawnioną strategią losową tzn.:\n" +
-                              "\tJeśli w danym ruchu jest pole które daje mu natychmiastową wygraną/przegraną to maluje te pole,\n" +
-                              "\taby odpowiednio wygrać/zablokować). W pozostałych przypadkach rusza się losowo.\n");
+            Console.WriteLine(Content.PlayersInformation);
 
             do
             {
-                var player1 = new ComputerPlayer(ConsoleColor.Red, new NaiveStrategy(boardValues, k.Value));
-                //var player2 = new ComputerPlayer(ConsoleColor.Green, new ImprovedRandomStrategy(k.Value));
-                var player2 = new ComputerPlayer(ConsoleColor.Green, new MinMaxStrategy(k.Value));
-
                 var game = new GameWithOutput(player1, player2, boardValues, k.Value);
                 game.Start();
-
-                Console.WriteLine("\nNaciśnij klawisz R aby powtórzyć rozgrywkę dla tych samych danych.\nNaciśnij dowolny inny klawisz, aby powrócić do menu głównego.\n");
+                
+                Console.WriteLine(Content.AfterGameMessage);
                 subPressedKey = Console.ReadKey(true);
+
+                game.Reset();
+                player1.Reset();
+                player2.Reset();
+
             } while (subPressedKey.Key == ConsoleKey.R);
 
             Console.Clear();
@@ -129,7 +122,7 @@ namespace SzemerediGame.UserInterface
 
                     result = GameHelpers.GenerateArray(n.Value, a.Value, b.Value);
 
-                    player1 = new ComputerPlayer(ConsoleColor.Red, new RandomStrategy());
+                    player1 = new ComputerPlayer(ConsoleColor.Red, new MinMaxStrategy(k.Value));
                     player2 = new ComputerPlayer(ConsoleColor.Green, new NaiveStrategy(result, k.Value));
 
                     correctParameters = true;
@@ -178,7 +171,7 @@ namespace SzemerediGame.UserInterface
 
                     result = GameHelpers.Prepare(setArray);
 
-                    player1 = new ComputerPlayer(ConsoleColor.Red, new RandomStrategy());
+                    player1 = new ComputerPlayer(ConsoleColor.Red, new MinMaxStrategy(k.Value));
                     player2 = new ComputerPlayer(ConsoleColor.Green, new NaiveStrategy(result, k.Value));
 
                     correctParameters = true;
@@ -201,14 +194,6 @@ namespace SzemerediGame.UserInterface
 
         private static class Content
         {
-            public const string DescriptionContentText = "Na początku rozgrywki komputer losuje zbiór liczb;" +
-                                             "naturalnych X. Każdy gracz ma swój własny kolor.;" +
-                                             "Ruch polega na wybraniu niepokolorowanej liczby ze;" +
-                                             "zbioru X i pokolorowaniu jej swoim kolorem.;" +
-                                             "Gracze ścigają się kto pierwszy ułoży monochromatyczny;" +
-                                             "ciąg arytmetyczny o zadanej długości k.;" +
-                                             "Zadanie: Symulacja gry komputer kontra komputer, testy.";
-
             public const string MenuOptionsText = "1. Start;2. Exit";
 
             public const string HeaderText = "Gra Szemerediego";
@@ -226,6 +211,12 @@ namespace SzemerediGame.UserInterface
             public const string GiveUpper = "Podaj górną wartość przedziału losowania liczb:";
 
             public const string GiveLower = "Podaj dolną wartość przedziału losowania liczb:";
+
+            public const string AfterGameMessage = "\nNaciśnij klawisz R aby powtórzyć rozgrywkę dla tych samych danych.\nNaciśnij dowolny inny klawisz, aby powrócić do menu głównego.\n";
+
+            public const string PlayersInformation =
+                "Gracz czerwony gra strategią algorytmu min max (heurystyka oceniająca każdy ruch).\n" +
+                "Gracz zielony gra strategią naiwną (dokładną), która wylicza wszystkie dostępne ruchy (stąd ograniczenie na rozmiar zadania)\n";
         }
     }
 }

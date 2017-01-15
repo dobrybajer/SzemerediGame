@@ -2,7 +2,7 @@
 {
     public class GameField
     {
-        public ComputerPlayer Player { get; private set; }
+        public ComputerPlayer Player { get; set; }
         public int Value { get; set; }
         public bool IsAssigned => Player != null;
 

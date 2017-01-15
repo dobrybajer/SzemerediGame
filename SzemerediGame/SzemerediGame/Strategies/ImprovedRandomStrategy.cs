@@ -64,5 +64,10 @@ namespace SzemerediGame.Strategies
 
             return new GameMove { Index = potentialMoves[randomIndex] };
         }
+
+        public void Reset()
+        {
+            
+        }
     }
 }
