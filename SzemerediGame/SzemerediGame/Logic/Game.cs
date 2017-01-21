@@ -23,6 +23,7 @@ namespace SzemerediGame.Logic
         public void Reset()
         {
             Board.Reset();
+            CurrentPlayer = _player2; // Celowo ustawiony drugi gracz
         }
 
         public virtual GameResult Start()

@@ -16,8 +16,6 @@ namespace SzemerediGame.Strategies
 
         public GameMove Move(Board board, ComputerPlayer player)
         {
-            //return new GameMove { Index = int.Parse(Console.ReadLine()) };
-
             var potentialMoves = new List<int>();
             for (var i = 0; i < board.BoardArray.Length; i++)
             {

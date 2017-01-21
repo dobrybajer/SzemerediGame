@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SzemerediGame.Helpers
 {
-    internal class GameHelpers
+    public class GameHelpers
     {
         public static int[] GenerateArray(int n, int a, int b)
         {

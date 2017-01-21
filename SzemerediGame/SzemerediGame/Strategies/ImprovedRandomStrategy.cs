@@ -9,7 +9,7 @@ using SzemerediGame.Logic;
 
 namespace SzemerediGame.Strategies
 {
-    class ImprovedRandomStrategy : IGameStrategy
+    public class ImprovedRandomStrategy : IGameStrategy
     {
         private readonly int _winningSequenceLength;
 

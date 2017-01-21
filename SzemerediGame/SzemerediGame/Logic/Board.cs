@@ -35,6 +35,9 @@ namespace SzemerediGame.Logic
             {
                 t.Player = null;
             }
+
+            WinningSet = null;
+            _movesCountSoFar = 0;
         }
 
         private Board(IReadOnlyList<GameField> board, int winningSeriesLength)

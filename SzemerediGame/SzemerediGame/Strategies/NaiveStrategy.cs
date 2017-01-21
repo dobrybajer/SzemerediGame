@@ -7,7 +7,7 @@ using SzemerediGame.Logic;
 
 namespace SzemerediGame.Strategies
 {
-    internal class NaiveStrategy : IGameStrategy
+    public class NaiveStrategy : IGameStrategy
     {
         private const long MaxCombinationCount = 601080390;
         

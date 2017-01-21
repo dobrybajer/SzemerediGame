@@ -9,20 +9,15 @@ namespace SzemerediGame.Strategies
     public class MinMaxStrategy : IGameStrategy
     {
         private readonly int _winningSequenceLength;
-
-        private const int Depth = 10;
+        private readonly int _depth;
 
         private ComputerPlayer _maxPlayer;
         private ComputerPlayer _minPlayer;
 
-        public MinMaxStrategy()
-        {
-            _winningSequenceLength = 0;
-        }
-
-        public MinMaxStrategy(int k)
+        public MinMaxStrategy(int k, int depth = 10)
         {
             _winningSequenceLength = k;
+            _depth = depth;
         }
 
         public GameMove Move(Board board, ComputerPlayer player)
@@ -30,7 +25,7 @@ namespace SzemerediGame.Strategies
             _maxPlayer = player;
             _minPlayer = FindOpponentPlayer(board, player);
 
-            var move = AlphaBeta((Board)board.Clone(), Depth, int.MinValue, int.MaxValue);
+            var move = AlphaBeta((Board)board.Clone(), _depth, int.MinValue, int.MaxValue);
             return new GameMove() { Index = move };
         }
 
@@ -79,7 +74,7 @@ namespace SzemerediGame.Strategies
 
             if (board.WinningSet != null && board.WinningSet.Length > 0)
             {
-                value = isOpponent ? -10000 - (Depth - depth) * 100 : 10000 + depth * 100;
+                value = isOpponent ? -10000 - (_depth - depth) * 100 : 10000 + depth * 100;
 
                 // Count how many other options are there for winning / losing (except the current winning set).
                 int totalOtherWins = 0;
@@ -158,7 +153,7 @@ namespace SzemerediGame.Strategies
                     break;
             }
 
-            if (depth == Depth)
+            if (depth == _depth)
                 return move;
 
             return alpha;
@@ -186,9 +181,9 @@ namespace SzemerediGame.Strategies
             return beta;
         }
 
-        private static bool IsOpponentMove(int depth)
+        private bool IsOpponentMove(int depth)
         {
-            return depth % 2 != Depth % 2;
+            return depth % 2 != _depth % 2;
         }
 
         private static IEnumerable<int> GetAllAvaliableMoves(Board board)

@@ -9,6 +9,8 @@ namespace SzemerediGame.Logic
         
         private readonly IGameStrategy _gameStrategy;
 
+        public string StrategyName => _gameStrategy.GetType().Name;
+
         public ComputerPlayer(ConsoleColor color, IGameStrategy gameStrategy)
         {
             Color = color;
