@@ -11,7 +11,7 @@ namespace SzemerediGame.Strategies
     {
         private const long MaxCombinationCount = 601080390;
         
-        private readonly Dictionary<long, ushort> _allMovesSet;
+        private Dictionary<long, ushort> _allMovesSet;
         private readonly List<int> _boardValues;
 
         private bool? _firstPlayer;
@@ -266,10 +266,14 @@ namespace SzemerediGame.Strategies
 
         public void Reset()
         {
-            for (var i = 0; i < _allMovesSet.Count; ++i)
+            var allMovesSetToReset = new Dictionary<long, ushort>();
+            
+            foreach (var m in _allMovesSet)
             {
-                _allMovesSet[i] = 0;
+                allMovesSetToReset[m.Key] = 0;
             }
+
+            _allMovesSet = allMovesSetToReset;
 
             _excludedFieldsForPlayer = new List<int>();
             _excludedFieldsForOponent = new List<int>();
