@@ -10,13 +10,14 @@ using SzemerediGame.Strategies;
 namespace StrategiesTests
 {
     [TestClass]
+    // Testy z restowaniem, gramy na tej samej planszy 100 razy
     public class StrategiesTests
     {
         public const int GamesIterations = 100;
 
-        public const int K = 3;
+        public const int K = 4;
 
-        public const int N = 9;
+        public const int N = 13;
 
         /// <summary>
         /// Losowany początek przedziału
@@ -26,9 +27,9 @@ namespace StrategiesTests
         /// <summary>
         /// Losowany koniec przedziału
         /// </summary>
-        public const int B = 10; // x < B
+        public const int B = 14; // x < B
 
-        public const int MinMaxDepth = 9;
+        public const int MinMaxDepth = 6;
 
         private void BattlesImplementation(ComputerPlayer player1, ComputerPlayer player2, List<int> boardValues)
         {
