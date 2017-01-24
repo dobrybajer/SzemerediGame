@@ -26,7 +26,7 @@ namespace StrategiesTests
         /// <summary>
         /// Losowany koniec przedziału
         /// </summary>
-        public const int B = 9;
+        public const int B = 10; // x < B
 
         public const int MinMaxDepth = 9;
 
